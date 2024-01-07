@@ -48,3 +48,10 @@
     flex-direction: column;
     align-items: center;
 }
+.btn-load-more{
+  display: flex;
+  
+}
+.hidden{
+  display: none;
+}

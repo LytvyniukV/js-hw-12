@@ -1,4 +1,5 @@
-export const markup = ({ hits }) => {
+
+export const markupCards = ({ hits }) => {
   return hits.reduce(
     (html, image) =>
       html +
@@ -29,3 +30,8 @@ export const markup = ({ hits }) => {
     ''
   );
 };
+
+export const markupButtonLoad = () => {
+  return `<button class='btn-load-more'>Load more</button>`
+};
+

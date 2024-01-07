@@ -1,6 +1,4 @@
-import { renderImages } from './js/render-images';
+import { renderCards } from './js/renderCards';
 import { refs } from './js/refs';
 
-
-
-refs.searchForm.addEventListener('submit', renderImages);
+refs.searchForm.addEventListener('submit', renderCards);
