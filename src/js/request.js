@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { refs } from './refs';
+import { page, imagesPerPage, queryValue } from './renderCards';
 
 export const makeRequest = async () => {
   const response = axios.get(`https://pixabay.com/api`, {
@@ -9,9 +10,9 @@ export const makeRequest = async () => {
       orientation: 'horizontal',
       safesearch: true,
       q: refs.searchInput.value,
-      per_page: 40,
-      // page: page,
+      per_page: imagesPerPage,
+      page: page,
     },
   });
-  return (await response).data
+  return (await response).data;
 };

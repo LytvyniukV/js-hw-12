@@ -31,7 +31,5 @@ export const markupCards = ({ hits }) => {
   );
 };
 
-export const markupButtonLoad = () => {
-  return `<button class='btn-load-more'>Load more</button>`
-};
+
 
