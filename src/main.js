@@ -1,4 +1,4 @@
-import { renderCards } from './js/renderCards';
+import { onSearch } from './js/create-search';
 import { refs } from './js/refs';
 
-refs.searchForm.addEventListener('submit', renderCards);
+refs.searchForm.addEventListener('submit', onSearch);
