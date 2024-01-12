@@ -1,43 +1,54 @@
 import { modalGallery } from './gallery-init';
 import { refs } from './refs';
-import { makeRequest } from './request';
-import { checkResponse } from './check-response';
+import { createGetImagesRequest } from './request';
 import { renderImages } from './markup';
-
-export const imagesPerPage = 40;
-export let page = 1;
-let queryValue;
-// const customLoader = "<div class='loader'></div>";
-
+import { addClass, removeClass } from './manage-class';
+import { createAutoScroll } from './scroll';
+import { showMessageForEmptyInput } from './show-message';
+let loadMoreImages = null;
+export let page;
 export const onSearch = async event => {
   event.preventDefault();
   refs.paginationBtn.classList.add('hidden');
-  const form = event.currentTarget;
-  const searchQuery = form.elements.query.value;
-  if (searchQuery.trim() === '') return;
-  queryValue = searchQuery;
-  
-  try {
-    const images = await makeRequest(queryValue);
-    checkResponse(images);
+  page = 1;
+  if (loadMoreImages !== null) {
+    refs.paginationBtn.removeEventListener('click', loadMoreImages);
+    loadMoreImages = null;
+  }
+  const spinner = document.querySelector('.loader');
+  const searchQuery = new FormData(event.currentTarget).get('query');
+  if (searchQuery.trim() === '') {
+    showMessageForEmptyInput();
+    return;
+  }
+  refs.gallery.innerHTML = '';
+
+  loadMoreImages = async () => {
+    const images = await showSpinner({
+      promise: createGetImagesRequest({
+        page: page,
+        q: searchQuery,
+      }),
+      spinner: spinner,
+    });
     renderImages(images);
     modalGallery.refresh();
-    refs.searchForm.reset();
-  } catch (error) {
-    console.log(new Error(error)); // спробувати видавати повідомлення якщо не знайшли картинок через ф-ію showMessage
+    if(page > 1) createAutoScroll();
+    page++;
+  };
+
+  loadMoreImages();
+
+  refs.searchForm.reset();
+  refs.paginationBtn.addEventListener('click', loadMoreImages);
+
+  async function showSpinner({ promise, spinner }) {
+    removeClass(spinner);
+
+    const response = await promise;
+
+    addClass(spinner);
+
+    return response;
   }
-  page = 2;
-
-  // refs.gallery.innerHTML = customLoader;  ПРИДУМАТИ ЩОСЬ З ЗАГРУЗКОЮ
 };
-
-const pagination = () => {};
-
-
-
-
-
-
-
-
-
