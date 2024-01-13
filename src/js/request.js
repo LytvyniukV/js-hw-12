@@ -1,8 +1,11 @@
 import axios from 'axios';
-import { showMessageError, showMessageEndImages } from './show-message';
+import {
+  showMessageError,
+  showMessageEndImages,
+  showMessageFetchError,
+} from './show-message';
 import { refs } from './refs';
 import { addClass, removeClass } from './manage-class';
-
 
 const api = axios.create({
   params: {
@@ -13,14 +16,8 @@ const api = axios.create({
   },
 });
 const getResponse = async params => {
-  try {
-    const response = await api.get('https://pixabay.com/api/', { params });
-    return response.data;
-  } catch {
-    error => {
-      console.log(error);
-    };
-  }
+  const response = await api.get('https://pixabay.com/api/', { params });
+  return response.data;
 };
 
 export const createGetImagesRequest = async ({ page, q }) => {
@@ -38,15 +35,15 @@ export const createGetImagesRequest = async ({ page, q }) => {
     }
 
     if (per_page < totalHits) {
-      removeClass(refs.paginationBtn)
+      removeClass(refs.paginationBtn);
     }
     if (page === Math.ceil(totalHits / per_page)) {
-      addClass(refs.paginationBtn)
+      addClass(refs.paginationBtn);
       showMessageEndImages();
     }
 
     return hits;
   } catch (error) {
-    console.error(error);
+    showMessageFetchError();
   }
 };
